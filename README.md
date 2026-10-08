@@ -17,21 +17,22 @@ High-end product launch and motion graphics showcase videos created for [Mobbin]
 
 ---
 
-## 🎬 Cut 2: 24s Launch Teaser (`Hyperframes`)
+## 🎬 Cut 2: 24s Meta Muse-Style Product Video (`Hyperframes`)
 
-> A product teaser created using [Hyperframes](https://hyperframes.heygen.com/) and [/brag](https://github.com/latent-spaces/brag).
+> Re-architected to faithfully mirror the [Meta Muse launch film](https://x.com/Muse/status/2097399178376671666/video/1) visual aesthetic: luminous high-key white canvas, pillowy floating cards with diffused shadows, conversational chat prompts, floating status pills, kinetic typography with inline badges, an orbiting tools vortex, and a minimal black outro.
 
-- **Watch Video**: [`brag.mp4`](brag.mp4) (1080p @ 30fps, 3.3 MB)
+- **Watch Video**: [`brag.mp4`](brag.mp4) (1080p @ 30fps, 3.8 MB, 24.0s)
 - **Preview Poster**:
 
 ![Mobbin Video Poster](brag.jpg)
 
-### Storyboard Breakdown (24s)
-1. **Scene 1 (0–4.2s): The Hook** — *"Where teams and agents find designs that work"* with 3D isometric phone mockups.
-2. **Scene 2 (4.2–9.0s): The Scale** — *"400,000+ Searchable Screens"* across iOS, Android, and Web patterns.
-3. **Scene 3 (9.0–14.5s): Deep User Flows** — End-to-end flow teardowns for Onboarding, Paywalls, and Checkout.
-4. **Scene 4 (14.5–20.0s): AI & MCP** — *"Give your AI agents access to Mobbin"* featuring Model Context Protocol integration.
-5. **Scene 5 (20.0–24.0s): Outro** — Mobbin wordmark and call-to-action.
+### Storyboard Breakdown (24s — Muse Choreography)
+1. **Scene 1 (0–3.8s): The Emblem & Grid Reveal** — Centered pillowy Mobbin app emblem zooms out into a 24-app matrix grid, followed by kinetic headline: *"Mobbin is A new kind of inspiration"*.
+2. **Scene 2 (3.8–8.2s): Search Pill & Conversational Ask** — Floating search bar `+ "What onboarding flows convert best? ↑"` transforms into conversational iOS chat bubbles with top status pill.
+3. **Scene 3 (8.2–13.5s): Pillowy App Window & Flow Teardown** — Floating browser window (`mobbin.com/discover`) with top app rows (Duolingo, Revolut, Linear) smoothly transitioning into verified teardown screens with conversion metrics.
+4. **Scene 4 (13.5–17.5s): "Done!" & Kinetic Typography** — Bold *"Done!"* title with status pill morphing into *"Design that is always inspiring you"*.
+5. **Scene 5 (17.5–21.8s): Orbiting Connected Ecosystem** — Centered pill `Connect Mobbin to your stack` surrounded by an orbiting vortex of tools (Figma, Cursor, Claude, iOS, Android, Linear, Raycast, React).
+6. **Scene 6 (21.8–24.0s): Signature Black Outro** — Clean cut to pure black with white rounded app icon and `mobbin.com` call-to-action.
 
 ---
 
