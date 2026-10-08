@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<!-- onetake · Mobbin 20s Product Video · Concept 1: The Infinite Flow Filament -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mobbin · 20s One Take</title>
+<style>
+:root {
+  --ground: #0b0c10;
+  --deep: #060709;
+  --card: #13141c;
+  --line: #212330;
+  --mute: #8b949e;
+  --ink: #f0f3f6;
+  --accent: #3b82f6;
+  --accent2: #60a5fa;
+  --glow: rgba(59, 130, 246, 0.45);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); color: var(--ink); }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+
+#viewport {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, #151824 0%, #0b0c10 70%, #060709 100%);
+}
+
+/* 3D World Stage driven by OM.camera */
+#world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+/* Background grid */
+#grid-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* SVG Filament Layer */
+#filament-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 50;
+}
+.filament-core {
+  fill: none;
+  stroke: var(--accent2);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.filament-glow {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.6;
+  filter: drop-shadow(0 0 16px var(--accent));
+}
+.filament-head {
+  fill: #fff;
+  filter: drop-shadow(0 0 12px var(--accent2)) drop-shadow(0 0 24px var(--accent));
+}
+
+/* Scene 1: App Icon */
+#icon-container {
+  position: absolute;
+  left: 960px;
+  top: 540px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 20;
+}
+.app-icon {
+  width: 140px;
+  height: 140px;
+  border-radius: 32px;
+  background: linear-gradient(135deg, #1e2230 0%, #0d0e15 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 40px rgba(59, 130, 246, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.app-icon svg { width: 72px; height: 72px; fill: #fff; }
+.icon-label {
+  margin-top: 18px;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--mute);
+  letter-spacing: -0.01em;
+}
+.ripple-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* Scene 2: The Flow Sequence (3 Screens) */
+#flow-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  z-index: 30;
+  pointer-events: none;
+}
+.mobile-mockup {
+  position: absolute;
+  width: 320px;
+  height: 640px;
+  border-radius: 40px;
+  background: #10121a;
+  border: 3px solid #282c3c;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+}
+.mockup-header {
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.mockup-body {
+  flex: 1;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.mockup-badge {
+  position: absolute;
+  top: -46px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c202e;
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent2);
+  white-space: nowrap;
+}
+
+/* Screen 3: Paywall detailed UI */
+.paywall-hero {
+  height: 120px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+}
+.paywall-hero h4 { margin: 0 0 4px; font-size: 17px; font-weight: 700; color: #fff; }
+.paywall-hero p { margin: 0; font-size: 12px; color: var(--mute); }
+.pricing-card {
+  border-radius: 16px;
+  border: 1.5px solid var(--accent);
+  background: rgba(59, 130, 246, 0.08);
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pricing-pill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--accent);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.cta-button {
+  height: 52px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.4);
+  position: relative;
+}
+
+/* Scene 3: Colossal Gallery Wall (600,000+ screens) */
+#wall-stage {
+  position: absolute;
+  left: -2000px;
+  top: -1500px;
+  width: 5920px;
+  height: 4080px;
+  display: grid;
+  grid-template-columns: repeat(12, 340px);
+  gap: 36px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.wall-card {
+  height: 680px;
+  border-radius: 28px;
+  background: #141620;
+  border: 1.5px solid #232738;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+.wall-card-img {
+  flex: 1;
+  background: #1a1e2c;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+}
+.wall-bar {
+  height: 14px;
+  border-radius: 7px;
+  background: rgba(255,255,255,0.06);
+}
+
+/* Scene 3 Overlay Typography */
+#wall-headline {
+  position: absolute;
+  left: 960px;
+  top: 500px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 45;
+  pointer-events: none;
+  opacity: 0;
+}
+#wall-headline h1 {
+  font-size: 104px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, #ffffff 30%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+}
+#wall-headline p {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--accent2);
+  margin: 16px 0 0;
+  letter-spacing: -0.01em;
+}
+
+/* Scene 4: UI Inspector / Token breakdown */
+#inspector-stage {
+  position: absolute;
+  left: 960px;
+  top: 540px;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  height: 580px;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+}
+.token-badge {
+  position: absolute;
+  background: #1e2232;
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: 'Geist Mono', monospace;
+  color: var(--accent2);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.token-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+/* Scene 5: Figma Export & Vectors */
+#figma-stage {
+  position: absolute;
+  left: 960px;
+  top: 540px;
+  transform: translate(-50%, -50%);
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0;
+  text-align: center;
+}
+.figma-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: rgba(30, 34, 50, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* Scene 6: Staccato kinetic hits */
+#staccato-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0;
+}
+.staccato-word {
+  font-size: 140px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+
+/* Scene 7: Final Brand Lockup */
+#lockup-stage {
+  position: absolute;
+  left: 960px;
+  top: 540px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+  text-align: center;
+}
+.mobbin-logo-svg {
+  width: 140px;
+  height: 64px;
+  fill: #fff;
+  filter: drop-shadow(0 10px 30px rgba(59, 130, 246, 0.3));
+}
+.brand-name {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  margin-top: 28px;
+  color: #fff;
+}
+.brand-sub {
+  font-size: 24px;
+  font-weight: 450;
+  color: var(--mute);
+  margin-top: 14px;
+  max-width: 720px;
+}
+.brand-url {
+  margin-top: 32px;
+  padding: 10px 24px;
+  border-radius: 999px;
+  background: #161924;
+  border: 1px solid var(--line);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent2);
+}
+
+/* Canvas for interactive UI inspection glow */
+#inspector-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  pointer-events: none;
+  z-index: 65;
+}
+</style>
+</head>
+<body>
+<div id="viewport">
+  <canvas id="grid-canvas" width="1920" height="1080"></canvas>
+  
+  <div id="world">
+    <!-- Scene 1: App Icon -->
+    <div id="icon-container">
+      <div class="app-icon" id="app-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+        <div class="ripple-ring" id="ripple"></div>
+      </div>
+      <div class="icon-label" id="icon-label">Spotify · iOS Flow</div>
+    </div>
+
+    <!-- Scene 2: The Flow Sequence -->
+    <div id="flow-stage">
+      <!-- Screen 01: Welcome -->
+      <div class="mobile-mockup" id="scr1" style="left: 420px; top: 220px;">
+        <div class="mockup-badge">01 · Welcome Screen</div>
+        <div class="mockup-header"><span>9:41</span><span>5G</span></div>
+        <div class="mockup-body">
+          <div style="height: 160px; border-radius: 20px; background: #1c202e; display: flex; align-items: center; justify-content: center;">
+            <svg width="48" height="48" fill="#3b82f6" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+          </div>
+          <div style="height: 24px; width: 70%; background: #282c3c; border-radius: 6px;"></div>
+          <div style="height: 14px; width: 90%; background: #1c202e; border-radius: 4px;"></div>
+          <div style="height: 14px; width: 60%; background: #1c202e; border-radius: 4px;"></div>
+          <div style="margin-top: auto; height: 44px; border-radius: 12px; background: #282c3c;"></div>
+        </div>
+      </div>
+
+      <!-- Screen 02: Onboarding -->
+      <div class="mobile-mockup" id="scr2" style="left: 800px; top: 220px;">
+        <div class="mockup-badge">02 · Choose Artists</div>
+        <div class="mockup-header"><span>9:41</span><span>5G</span></div>
+        <div class="mockup-body">
+          <div style="height: 20px; width: 50%; background: #282c3c; border-radius: 5px;"></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+            <div style="height: 80px; border-radius: 14px; background: #1c202e;"></div>
+            <div style="height: 80px; border-radius: 14px; background: #1c202e;"></div>
+            <div style="height: 80px; border-radius: 14px; background: #1c202e;"></div>
+            <div style="height: 80px; border-radius: 14px; background: #1c202e;"></div>
+          </div>
+          <div style="margin-top: auto; height: 44px; border-radius: 12px; background: #282c3c;"></div>
+        </div>
+      </div>
+
+      <!-- Screen 03: Paywall Pro -->
+      <div class="mobile-mockup" id="scr3" style="left: 1180px; top: 220px;">
+        <div class="mockup-badge" style="color: #60a5fa; border-color: #3b82f6;">03 · Premium Paywall</div>
+        <div class="mockup-header"><span>9:41</span><span>5G</span></div>
+        <div class="mockup-body">
+          <div class="paywall-hero">
+            <h4>Spotify Premium</h4>
+            <p>Ad-free music · Offline listening</p>
+          </div>
+          <div class="pricing-card" id="pricing-card">
+            <div>
+              <div style="font-size: 15px; font-weight: 700; color: #fff;">Annual Plan</div>
+              <div style="font-size: 12px; color: var(--mute);">$99.99 / year</div>
+            </div>
+            <span class="pricing-pill">Save 30%</span>
+          </div>
+          <div style="height: 48px; border-radius: 14px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; padding: 0 14px;">
+            <span style="font-size: 13px; color: var(--mute);">Monthly Plan</span>
+            <span style="font-size: 13px; font-weight: 600; color: #fff;">$11.99/mo</span>
+          </div>
+          <div class="cta-button" id="paywall-cta" style="margin-top: auto;">
+            <span>Start 7-Day Free Trial</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 3: Colossal Grid Wall -->
+    <div id="wall-stage"></div>
+
+    <!-- Scene 4: UI Inspector -->
+    <div id="inspector-stage">
+      <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 360px; height: 80px; border-radius: 16px; background: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: #fff; box-shadow: 0 12px 30px rgba(59,130,246,0.5);">
+        <span>Start 7-Day Free Trial</span>
+      </div>
+      <div class="token-badge" id="tok1" style="left: 60px; top: 100px;">
+        <div class="token-dot"></div><span>border-radius: 16px</span>
+      </div>
+      <div class="token-badge" id="tok2" style="right: 60px; top: 100px;">
+        <div class="token-dot"></div><span>background: #3B82F6</span>
+      </div>
+      <div class="token-badge" id="tok3" style="left: 120px; bottom: 100px;">
+        <div class="token-dot"></div><span>font-weight: 600 (Semibold)</span>
+      </div>
+      <div class="token-badge" id="tok4" style="right: 100px; bottom: 100px;">
+        <div class="token-dot"></div><span>padding: 16px 24px</span>
+      </div>
+    </div>
+
+    <!-- Scene 5: Figma Export -->
+    <div id="figma-stage">
+      <div id="figma-cards" style="display: flex; gap: 20px; justify-content: center; margin-bottom: 36px; transform: perspective(1200px) rotateX(12deg) rotateY(-6deg);">
+        <div style="width: 170px; height: 340px; border-radius: 20px; background: #161926; border: 1.5px solid #3b82f6; box-shadow: 0 20px 50px rgba(0,0,0,0.6); padding: 14px;">
+          <div style="height: 12px; width: 60%; background: #282c3c; border-radius: 4px; margin-bottom: 12px;"></div>
+          <div style="height: 100px; border-radius: 12px; background: #1f2434; margin-bottom: 10px;"></div>
+          <div style="height: 10px; width: 80%; background: #282c3c; border-radius: 4px;"></div>
+        </div>
+        <div style="width: 170px; height: 340px; border-radius: 20px; background: #161926; border: 1.5px solid #3b82f6; box-shadow: 0 20px 50px rgba(0,0,0,0.6); padding: 14px;">
+          <div style="height: 12px; width: 60%; background: #282c3c; border-radius: 4px; margin-bottom: 12px;"></div>
+          <div style="height: 100px; border-radius: 12px; background: #1f2434; margin-bottom: 10px;"></div>
+          <div style="height: 10px; width: 80%; background: #282c3c; border-radius: 4px;"></div>
+        </div>
+        <div style="width: 170px; height: 340px; border-radius: 20px; background: #161926; border: 1.5px solid #3b82f6; box-shadow: 0 20px 50px rgba(0,0,0,0.6); padding: 14px;">
+          <div style="height: 12px; width: 60%; background: #282c3c; border-radius: 4px; margin-bottom: 12px;"></div>
+          <div style="height: 100px; border-radius: 12px; background: #1f2434; margin-bottom: 10px;"></div>
+          <div style="height: 10px; width: 80%; background: #282c3c; border-radius: 4px;"></div>
+        </div>
+      </div>
+      <div class="figma-pill">
+        <svg width="24" height="36" viewBox="0 0 38 57" fill="none"><path d="M19 28.5A9.5 9.5 0 1 1 28.5 19 9.5 9.5 0 0 1 19 28.5z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262"/><path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E"/><path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF"/></svg>
+        <span>Copy Screen Sequence to Figma · Vector Auto-Layout</span>
+      </div>
+    </div>
+
+    <!-- Scene 6: Staccato Hits -->
+    <div id="staccato-stage">
+      <div class="staccato-word" id="stac-word">DISCOVER</div>
+    </div>
+
+    <!-- Scene 7: Final Brand Lockup -->
+    <div id="lockup-stage">
+      <div style="width: 120px; height: 120px; border-radius: 36px; background: #121522; border: 1.5px solid rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 50px rgba(59,130,246,0.25); margin-bottom: 24px;">
+        <svg class="mobbin-logo-svg" style="width: 76px; height: 35px;" viewBox="0 0 139 64">
+          <path d="M84.3504 64H48.1695V47.315L32.569 63.9989L0 63.9841V29.9515L28.31 0H67.4439V15.9214L82.6881 0H116.593V26.1874H139V64H99.1163V48.208L84.3504 64Z"/>
+        </svg>
+      </div>
+      <div class="brand-name">MOBBIN</div>
+      <div class="brand-sub">The world's largest UI & UX design reference library for mobile and web.</div>
+      <div class="brand-url">mobbin.com · 600,000+ Real Screens</div>
+    </div>
+
+    <!-- Canvas for inspector glow ring -->
+    <canvas id="inspector-canvas" width="1920" height="1080"></canvas>
+  </div>
+
+  <!-- Filament SVG -->
+  <svg id="filament-svg">
+    <path id="filament-glow-path" class="filament-glow" d="" />
+    <path id="filament-core-path" class="filament-core" d="" />
+    <circle id="filament-head-dot" class="filament-head" cx="-100" cy="-100" r="7" />
+  </svg>
+
+  <!-- Wall Headline Overlay -->
+  <div id="wall-headline">
+    <h1>600,000+</h1>
+    <p>REAL-WORLD MOBILE &amp; WEB SCREENS</p>
+  </div>
+</div>
+
+<script src="look.js"></script>
+<script src="motion.js"></script>
+<script src="ui_kit.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════════════════════════════════════
+// onetake composition · Mobbin 20s · Concept 1: The Infinite Flow Filament
+// window.__seek(t) is pure, deterministic, seek-safe.
+// ══════════════════════════════════════════════════════════════════════════════════════════════
+
+const DUR = 20.0;
+window.__meta = { dur: DUR, fps: 30, w: 1920, h: 1080 };
+
+// Populate wall grid cards once
+const wallStage = document.getElementById('wall-stage');
+const APP_NAMES = ['Linear', 'Uber', 'Airbnb', 'Notion', 'Raycast', 'Duolingo', 'Arc', 'Figma', 'Slack', 'Revolut', 'Coinbase', 'Headspace'];
+for (let i = 0; i < 48; i++) {
+  const card = document.createElement('div');
+  card.className = 'wall-card';
+  const name = APP_NAMES[i % APP_NAMES.length];
+  card.innerHTML = `
+    <div style="padding: 14px 18px; border-bottom: 1px solid #232738; display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #8b949e;">
+      <span>${name}</span><span>Flow #${(i % 5) + 1}</span>
+    </div>
+    <div class="wall-card-img">
+      <div class="wall-bar" style="width: 60%;"></div>
+      <div style="height: 120px; border-radius: 12px; background: rgba(255,255,255,0.03); margin: 8px 0;"></div>
+      <div class="wall-bar" style="width: 80%;"></div>
+      <div class="wall-bar" style="width: 50%;"></div>
+      <div class="wall-bar" style="width: 90%;"></div>
+      <div class="wall-bar" style="width: 40%; margin-top: auto;"></div>
+    </div>
+  `;
+  wallStage.appendChild(card);
+}
+
+// Background subtle grid drawing
+const gridCanvas = document.getElementById('grid-canvas');
+const gctx = gridCanvas.getContext('2d');
+function drawGrid() {
+  gctx.clearRect(0, 0, 1920, 1080);
+  gctx.strokeStyle = '#212330';
+  gctx.lineWidth = 1;
+  const step = 60;
+  for (let x = 0; x <= 1920; x += step) {
+    gctx.beginPath(); gctx.moveTo(x, 0); gctx.lineTo(x, 1080); gctx.stroke();
+  }
+  for (let y = 0; y <= 1080; y += step) {
+    gctx.beginPath(); gctx.moveTo(0, y); gctx.lineTo(1920, y); gctx.stroke();
+  }
+}
+drawGrid();
+
+// Inspector canvas
+const inspCanvas = document.getElementById('inspector-canvas');
+const ictx = inspCanvas.getContext('2d');
+
+// SVG Filament paths
+const corePath = document.getElementById('filament-core-path');
+const glowPath = document.getElementById('filament-glow-path');
+const headDot = document.getElementById('filament-head-dot');
+
+// DOM elements
+const worldEl = document.getElementById('world');
+const iconContainer = document.getElementById('icon-container');
+const rippleEl = document.getElementById('ripple');
+const flowStage = document.getElementById('flow-stage');
+const scr1 = document.getElementById('scr1');
+const scr2 = document.getElementById('scr2');
+const scr3 = document.getElementById('scr3');
+const wallEl = document.getElementById('wall-stage');
+const wallHeadline = document.getElementById('wall-headline');
+const inspStage = document.getElementById('inspector-stage');
+const figmaStage = document.getElementById('figma-stage');
+const staccatoStage = document.getElementById('staccato-stage');
+const stacWord = document.getElementById('stac-word');
+const lockupStage = document.getElementById('lockup-stage');
+
+// Staccato word timeline
+const STACCATO_WORDS = [
+  [14.50, 'EXPLORE.'],
+  [15.40, 'ANALYZE.'],
+  [16.30, 'SHIP FASTER.']
+];
+
+// Audio events
+window.__events = function () {
+  return [
+    [0.00, 'hold', { desc: 'macro_hold' }],
+    [1.20, 'tap', { desc: 'icon_press' }],
+    [1.30, 'filament_sprout', { desc: 'laser_ignite' }],
+    [2.20, 'slide', { scr: 1 }],
+    [2.70, 'slide', { scr: 2 }],
+    [3.30, 'land', { scr: 3 }],
+    [4.80, 'dive_out', { desc: 'exponential_pullback' }],
+    [7.60, 'whip_in', { desc: 'macro_penetration' }],
+    [9.20, 'settle', { desc: 'inspector_rest' }],
+    [11.20, 'click', { desc: 'figma_copy' }],
+    [14.50, 'hit', { word: 'EXPLORE.' }],
+    [15.40, 'hit', { word: 'ANALYZE.' }],
+    [16.30, 'hit', { word: 'SHIP FASTER.' }],
+    [17.50, 'lock', { desc: 'mobbin_wordmark' }]
+  ];
+};
+
+// Motion speed oracle helper for shutter blur
+window.__motion = function (t0, t1) {
+  // Return speed estimation in px across t0 -> t1
+  const dt = t1 - t0 || 0.033;
+  if ((t0 >= 4.7 && t0 <= 5.8) || (t0 >= 7.5 && t0 <= 8.5) || (t0 >= 14.4 && t0 <= 17.2)) {
+    return 140; // High speed motion blur triggers
+  }
+  if ((t0 >= 1.2 && t0 <= 3.4)) {
+    return 60;
+  }
+  return 10;
+};
+
+// Main seek function
+window.__seek = function (t) {
+  // Clamp t to duration
+  t = Math.max(0, Math.min(DUR, t));
+
+  // ─────────────────────────────── CAMERA KEYFRAMES ───────────────────────────────
+  // Keys: { t, x, y, zoom, rot, curve }
+  const camKeys = [
+    { t: 0.00, x: 960, y: 540, zoom: 1.6, rot: 0 },
+    { t: 1.20, x: 960, y: 540, zoom: 1.6, rot: 0 },
+    // Whip to flow start
+    { t: 2.20, x: 580, y: 540, zoom: 1.15, rot: 0.015, curve: OM.ease.expoOut },
+    // Glide along flow to paywall screen
+    { t: 3.40, x: 1340, y: 540, zoom: 1.15, rot: -0.01, curve: OM.ease.sineInOut },
+    // Hold on paywall
+    { t: 4.80, x: 1340, y: 540, zoom: 1.15, rot: 0 },
+    // Exponential dive out to colossal wall
+    { t: 5.60, x: 960, y: 540, zoom: 0.18, rot: 0.04, curve: OM.ease.expoInOut },
+    { t: 7.40, x: 960, y: 540, zoom: 0.16, rot: 0.01, curve: OM.ease.linear },
+    // Whip in to UI inspector macro
+    { t: 8.20, x: 960, y: 540, zoom: 1.85, rot: -0.02, curve: OM.ease.expoInOut },
+    // Settle & hold on inspector
+    { t: 9.20, x: 960, y: 540, zoom: 1.8, rot: 0, curve: OM.ease.sineInOut },
+    { t: 11.20, x: 960, y: 540, zoom: 1.8, rot: 0 },
+    // Pull out for Figma export
+    { t: 12.00, x: 960, y: 540, zoom: 1.1, rot: 0.02, curve: OM.ease.expoOut },
+    { t: 14.40, x: 960, y: 540, zoom: 1.0, rot: 0 },
+    // Staccato hits
+    { t: 14.50, x: 960, y: 540, zoom: 1.0, rot: 0 },
+    { t: 15.40, x: 960, y: 540, zoom: 1.05, rot: 0.02 },
+    { t: 16.30, x: 960, y: 540, zoom: 0.95, rot: -0.02 },
+    // Final lockup
+    { t: 17.50, x: 960, y: 540, zoom: 1.0, rot: 0, curve: OM.ease.expoOut },
+    { t: 20.00, x: 960, y: 540, zoom: 1.0, rot: 0 }
+  ];
+
+  const cam = OM.camera(t, camKeys);
+  const matrix = OM.view(cam);
+  worldEl.style.transform = `matrix(${matrix.join(',')})`;
+
+  // ─────────────────────────────── SCENE 1: APP ICON (0.00 - 2.20s) ───────────────────────────────
+  if (t < 2.5) {
+    iconContainer.style.display = 'flex';
+    const iconFade = t > 1.8 ? 1 - OM.seg(t, 1.8, 2.3) : 1;
+    iconContainer.style.opacity = iconFade;
+    // Icon press at 1.2s
+    const pr = OM.press(t, 1.2, { depth: 0.18, decay: 10, omega: 26 });
+    document.getElementById('app-icon').style.transform = `scale(${pr.s})`;
+    // Ripple ring
+    if (t >= 1.2) {
+      const ripT = (t - 1.2) / 0.8;
+      const ripR = Math.min(1, ripT) * 180;
+      const ripOp = Math.max(0, 1 - ripT);
+      rippleEl.style.width = (ripR * 2) + 'px';
+      rippleEl.style.height = (ripR * 2) + 'px';
+      rippleEl.style.opacity = ripOp;
+    } else {
+      rippleEl.style.opacity = 0;
+    }
+  } else {
+    iconContainer.style.display = 'none';
+  }
+
+  // ─────────────────────────────── SCENE 2: FLOW SEQUENCE (1.60 - 5.50s) ───────────────────────────────
+  if (t >= 1.6 && t < 5.8) {
+    flowStage.style.display = 'block';
+    const flowOp = t > 4.8 ? 1 - OM.seg(t, 4.8, 5.5) : OM.seg(t, 1.6, 2.2);
+    flowStage.style.opacity = flowOp;
+
+    // Pop in screens with slight stagger
+    const k1 = OM.spring(t - 1.8, 0.65, 18);
+    const k2 = OM.spring(t - 2.3, 0.65, 18);
+    const k3 = OM.spring(t - 2.8, 0.65, 18);
+
+    scr1.style.transform = `translateY(${(1 - Math.min(1, k1)) * 120}px) scale(${0.85 + 0.15 * Math.min(1, k1)})`;
+    scr2.style.transform = `translateY(${(1 - Math.min(1, k2)) * 120}px) scale(${0.85 + 0.15 * Math.min(1, k2)})`;
+    scr3.style.transform = `translateY(${(1 - Math.min(1, k3)) * 120}px) scale(${0.85 + 0.15 * Math.min(1, k3)})`;
+
+    // Paywall CTA button soft pulse during hold (3.4s - 4.8s)
+    if (t >= 3.4 && t <= 4.8) {
+      const pulse = 1 + 0.03 * Math.sin((t - 3.4) * Math.PI * 4);
+      document.getElementById('paywall-cta').style.transform = `scale(${pulse})`;
+    } else {
+      document.getElementById('paywall-cta').style.transform = 'scale(1)';
+    }
+  } else {
+    flowStage.style.display = 'none';
+  }
+
+  // ─────────────────────────────── SCENE 3: COLOSSAL WALL (4.80 - 8.20s) ───────────────────────────────
+  if (t >= 4.8 && t < 8.4) {
+    wallEl.style.display = 'grid';
+    const wallOp = t > 7.6 ? 1 - OM.seg(t, 7.6, 8.2) : OM.seg(t, 4.8, 5.5);
+    wallEl.style.opacity = wallOp * 0.9;
+
+    // Wall headline typography
+    wallHeadline.style.display = 'block';
+    const headOp = t > 7.4 ? 1 - OM.seg(t, 7.4, 7.8) : OM.seg(t, 5.2, 5.8);
+    wallHeadline.style.opacity = headOp;
+    const headRise = (1 - OM.tween(t, 5.2, 5.9, OM.ease.expoOut)) * 40;
+    wallHeadline.style.transform = `translate(-50%, calc(-50% + ${headRise}px))`;
+  } else {
+    wallEl.style.display = 'none';
+    wallHeadline.style.display = 'none';
+  }
+
+  // ─────────────────────────────── SCENE 4: UI INSPECTOR (7.60 - 11.50s) ───────────────────────────────
+  ictx.clearRect(0, 0, 1920, 1080);
+  if (t >= 7.6 && t < 11.8) {
+    inspStage.style.display = 'block';
+    const inspOp = t > 11.0 ? 1 - OM.seg(t, 11.0, 11.6) : OM.seg(t, 7.8, 8.4);
+    inspStage.style.opacity = inspOp;
+
+    // Token badges stagger pop in
+    ['tok1', 'tok2', 'tok3', 'tok4'].forEach((id, idx) => {
+      const tk = OM.spring(t - (8.0 + idx * 0.14), 0.6, 20);
+      const el = document.getElementById(id);
+      el.style.transform = `scale(${Math.min(1, Math.max(0, tk))})`;
+      el.style.opacity = Math.min(1, Math.max(0, tk * 1.5));
+    });
+
+    // Draw UIK.glowRing around inspected element (960, 540, 360, 80)
+    if (t >= 8.2 && t <= 11.4) {
+      UIK.glowRing(ictx, { x: 780, y: 500, w: 360, h: 80 }, t, 8.2, 11.2, '#3b82f6', {
+        pad: 12,
+        zoom: cam.zoom,
+        pop: tau => 1 + 0.08 * Math.exp(-6 * tau)
+      });
+    }
+  } else {
+    inspStage.style.display = 'none';
+  }
+
+  // ─────────────────────────────── SCENE 5: FIGMA EXPORT (11.20 - 14.50s) ───────────────────────────────
+  if (t >= 11.2 && t < 14.6) {
+    figmaStage.style.display = 'block';
+    const figOp = t > 14.0 ? 1 - OM.seg(t, 14.0, 14.5) : OM.seg(t, 11.2, 11.8);
+    figmaStage.style.opacity = figOp;
+
+    const figSpring = OM.spring(t - 11.3, 0.65, 18);
+    figmaStage.style.transform = `translate(-50%, -50%) scale(${0.8 + 0.2 * Math.min(1, figSpring)})`;
+  } else {
+    figmaStage.style.display = 'none';
+  }
+
+  // ─────────────────────────────── SCENE 6: STACCATO HITS (14.50 - 17.50s) ───────────────────────────────
+  if (t >= 14.5 && t < 17.5) {
+    staccatoStage.style.display = 'flex';
+    staccatoStage.style.opacity = 1;
+
+    const stac = OM.staccato(t, STACCATO_WORDS);
+    if (stac.word) {
+      stacWord.textContent = stac.word;
+      const wordT0 = STACCATO_WORDS[stac.i][0];
+      const wordTau = t - wordT0;
+      const sp = OM.spring(wordTau, 0.55, 24);
+      stacWord.style.transform = `scale(${0.9 + 0.1 * sp})`;
+    }
+  } else {
+    staccatoStage.style.display = 'none';
+  }
+
+  // ─────────────────────────────── SCENE 7: FINAL BRAND LOCKUP (17.30 - 20.00s) ───────────────────────────────
+  if (t >= 17.3) {
+    lockupStage.style.display = 'flex';
+    const lockOp = OM.seg(t, 17.3, 17.8);
+    lockupStage.style.opacity = lockOp;
+
+    const lk = OM.spring(t - 17.4, 0.65, 18);
+    lockupStage.style.transform = `translate(-50%, -50%) scale(${0.88 + 0.12 * Math.min(1, lk)})`;
+  } else {
+    lockupStage.style.display = 'none';
+  }
+
+  // ─────────────────────────────── THE INFINITE FLOW FILAMENT ───────────────────────────────
+  // A glowing connector spline drawn from scene 1 through the end
+  let pathD = '';
+  let headX = -100, headY = -100;
+
+  if (t >= 1.2 && t <= 4.8) {
+    // Stage 1 & 2: Sprouting and unspooling through screens
+    const fProgress = OM.seg(t, 1.2, 3.4);
+    const startX = 960, startY = 540;
+    const targetX = 1340, targetY = 540;
+    
+    // Convert world points to screen points through view matrix
+    // In Stage 1-2, filament connects:
+    // (960, 540) -> (580, 540) -> (960, 540) -> (1340, 540)
+    const pts = [
+      { x: 960, y: 540 },
+      { x: 740, y: 460 },
+      { x: 580, y: 540 },
+      { x: 960, y: 540 },
+      { x: 1340, y: 540 }
+    ];
+
+    const numSegments = pts.length - 1;
+    const currentProg = fProgress * numSegments;
+    const segIdx = Math.floor(currentProg);
+    const segFrac = currentProg - segIdx;
+
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 1; i <= Math.min(pts.length - 1, segIdx); i++) {
+      d += ` L ${pts[i].x} ${pts[i].y}`;
+    }
+    if (segIdx < pts.length - 1) {
+      const curX = pts[segIdx].x + (pts[segIdx + 1].x - pts[segIdx].x) * segFrac;
+      const curY = pts[segIdx].y + (pts[segIdx + 1].y - pts[segIdx].y) * segFrac;
+      d += ` L ${curX} ${curY}`;
+      headX = curX;
+      headY = curY;
+    } else {
+      headX = pts[pts.length - 1].x;
+      headY = pts[pts.length - 1].y;
+    }
+    pathD = d;
+  } else if (t > 4.8 && t < 7.6) {
+    // S-curve weaving through wall
+    const wProg = OM.seg(t, 4.8, 6.2);
+    const d = `M 200 400 Q 600 ${200 + 300 * Math.sin(t * 3)} 960 540 T 1720 680`;
+    pathD = d;
+    headX = 200 + 1520 * wProg;
+    headY = 540 + 140 * Math.sin(wProg * Math.PI * 2);
+  } else if (t >= 14.5 && t < 17.5) {
+    // Diagonal slash across staccato words
+    const sT = (t - 14.5) % 0.9;
+    const slashK = OM.seg(sT, 0.0, 0.45);
+    const x0 = 400, y0 = 300, x1 = 1520, y1 = 780;
+    const curX = x0 + (x1 - x0) * slashK;
+    const curY = y0 + (y1 - y0) * slashK;
+    pathD = `M ${x0} ${y0} L ${curX} ${curY}`;
+    headX = curX;
+    headY = curY;
+  }
+
+  if (pathD) {
+    corePath.setAttribute('d', pathD);
+    glowPath.setAttribute('d', pathD);
+    headDot.setAttribute('cx', headX);
+    headDot.setAttribute('cy', headY);
+    headDot.style.opacity = '1';
+    corePath.style.opacity = '1';
+    glowPath.style.opacity = '0.6';
+  } else {
+    corePath.style.opacity = '0';
+    glowPath.style.opacity = '0';
+    headDot.style.opacity = '0';
+  }
+
+  return Promise.resolve();
+};
+
+window.__ready = (typeof LOOK !== 'undefined' ? LOOK.ready : Promise.resolve()).then(() => {
+  return window.__seek(0);
+});
+</script>
+</body>
+</html>

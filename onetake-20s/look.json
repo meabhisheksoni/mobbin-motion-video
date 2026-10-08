@@ -1,0 +1,20 @@
+{
+  "name": "mobbin-obsidian",
+  "from": "mobbin.com",
+  "mood": "obsidian slate canvas, crisp vector UI cards, electric cobalt filament",
+  "color": {
+    "ground": "#0b0c10",
+    "deep": "#060709",
+    "card": "#13141c",
+    "line": "#212330",
+    "mute": "#8b949e",
+    "ink": "#f0f3f6",
+    "accent": "#3b82f6",
+    "accent2": "#60a5fa"
+  },
+  "type": {
+    "display": { "face": "Geist", "weight": 600, "tracking": -0.03 },
+    "text": { "face": "Inter", "weight": 450, "tracking": -0.01 },
+    "mono": { "face": "Geist Mono", "weight": 400, "tracking": 0 }
+  }
+}
