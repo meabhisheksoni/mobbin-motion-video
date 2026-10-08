@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #0b0f17;
+        font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #f8fafc;
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 30%, #151e2e 0%, #0b0f17 70%);
+      }
+
+      /* Background grid */
+      .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-size: 60px 60px;
+        background-image: 
+          linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        pointer-events: none;
+      }
+
+      /* Base clip scene */
+      .clip {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Brand tag / badge */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 18px;
+        border-radius: 9999px;
+        background: rgba(37, 99, 235, 0.15);
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        color: #93c5fd;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+
+      .badge-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3b82f6;
+        box-shadow: 0 0 10px #3b82f6;
+      }
+
+      /* Typography */
+      .headline-hero {
+        font-size: 76px;
+        font-weight: 800;
+        line-height: 1.1;
+        text-align: center;
+        max-width: 1300px;
+        letter-spacing: -0.03em;
+        background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+      }
+
+      .subhead {
+        font-size: 26px;
+        color: #94a3b8;
+        font-weight: 400;
+        max-width: 860px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      /* Scene 1 Mockups */
+      .mockup-container {
+        position: absolute;
+        bottom: -40px;
+        display: flex;
+        gap: 40px;
+        align-items: flex-end;
+        perspective: 1200px;
+      }
+      .phone-card {
+        width: 280px;
+        height: 480px;
+        border-radius: 36px;
+        background: #111827;
+        border: 4px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(37, 99, 235, 0.15);
+        overflow: hidden;
+        position: relative;
+      }
+      .phone-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .phone-left {
+        transform: rotateY(18deg) rotateZ(-4deg) translateY(40px);
+      }
+      .phone-center {
+        transform: scale(1.08) translateY(-10px);
+        z-index: 2;
+        border-color: rgba(59, 130, 246, 0.5);
+      }
+      .phone-right {
+        transform: rotateY(-18deg) rotateZ(4deg) translateY(40px);
+      }
+
+      /* Scene 2 Gallery & Counters */
+      .count-number {
+        font-size: 130px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        background: linear-gradient(135deg, #ffffff 30%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+      }
+      .filter-pills {
+        display: flex;
+        gap: 16px;
+        margin-top: 32px;
+      }
+      .pill {
+        padding: 12px 28px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 9999px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #e2e8f0;
+      }
+      .pill.active {
+        background: #2563eb;
+        border-color: #3b82f6;
+        color: #ffffff;
+        box-shadow: 0 0 25px rgba(37, 99, 235, 0.5);
+      }
+      .wall-row {
+        position: absolute;
+        bottom: 50px;
+        display: flex;
+        gap: 24px;
+        width: 2600px;
+      }
+      .wall-item {
+        width: 220px;
+        height: 280px;
+        border-radius: 20px;
+        background: #1e293b;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .wall-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* Scene 3 Flow cards */
+      .flows-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        margin-top: 50px;
+      }
+      .flow-card {
+        width: 380px;
+        height: 520px;
+        background: #111827;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .flow-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .flow-step-num {
+        font-size: 14px;
+        font-weight: 700;
+        color: #3b82f6;
+        letter-spacing: 0.08em;
+      }
+      .flow-step-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #f8fafc;
+      }
+      .flow-preview {
+        flex: 1;
+        overflow: hidden;
+        padding: 16px;
+        background: #0b0f17;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .flow-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+      .flow-arrow {
+        font-size: 32px;
+        color: #3b82f6;
+        opacity: 0.8;
+      }
+
+      /* Scene 4 MCP / AI */
+      .mcp-box {
+        width: 880px;
+        background: #0f172a;
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        border-radius: 28px;
+        box-shadow: 0 0 60px rgba(37, 99, 235, 0.25), 0 30px 60px rgba(0, 0, 0, 0.8);
+        overflow: hidden;
+        margin-top: 40px;
+      }
+      .mcp-topbar {
+        padding: 16px 24px;
+        background: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .terminal-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .dot-red { background: #ef4444; }
+      .dot-yellow { background: #f59e0b; }
+      .dot-green { background: #10b981; }
+      .mcp-code {
+        padding: 32px;
+        font-family: monospace;
+        font-size: 20px;
+        line-height: 1.8;
+        color: #93c5fd;
+      }
+      .mcp-code .keyword { color: #f43f5e; }
+      .mcp-code .string { color: #34d399; }
+      .mcp-code .prop { color: #e2e8f0; }
+
+      /* Scene 5 Outro */
+      .logo-title {
+        font-size: 110px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        color: #ffffff;
+        margin-bottom: 16px;
+      }
+      .cta-btn {
+        margin-top: 36px;
+        padding: 20px 48px;
+        background: #2563eb;
+        border-radius: 9999px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #ffffff;
+        box-shadow: 0 0 40px rgba(37, 99, 235, 0.6);
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="24"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div class="bg-grid"></div>
+
+      <!-- AUDIO TRACKS -->
+      <audio
+        id="bg-music"
+        data-start="0"
+        data-duration="24"
+        data-track-index="0"
+        data-volume="0.32"
+        data-fade-out="1.5"
+        src="assets/music/happy-beats-business-moves-vol-11-by-ende-dot-app.mp3"
+      ></audio>
+
+      <audio
+        id="sfx-hook"
+        data-start="1.4"
+        data-duration="0.2"
+        data-track-index="1"
+        data-volume="0.6"
+        src="assets/sfx/impact/impactSoft_medium_000.ogg"
+      ></audio>
+
+      <audio
+        id="sfx-pill1"
+        data-start="5.5"
+        data-duration="0.2"
+        data-track-index="2"
+        data-volume="0.5"
+        src="assets/sfx/interface/click_001.ogg"
+      ></audio>
+
+      <audio
+        id="sfx-pill2"
+        data-start="6.3"
+        data-duration="0.2"
+        data-track-index="3"
+        data-volume="0.5"
+        src="assets/sfx/interface/click_001.ogg"
+      ></audio>
+
+      <audio
+        id="sfx-flow"
+        data-start="9.8"
+        data-duration="0.2"
+        data-track-index="4"
+        data-volume="0.55"
+        src="assets/sfx/interface/drop_001.ogg"
+      ></audio>
+
+      <audio
+        id="sfx-mcp"
+        data-start="14.8"
+        data-duration="0.2"
+        data-track-index="5"
+        data-volume="0.6"
+        src="assets/sfx/impact/impactSoft_medium_000.ogg"
+      ></audio>
+
+      <audio
+        id="sfx-outro"
+        data-start="19.8"
+        data-duration="1.5"
+        data-track-index="6"
+        data-volume="0.75"
+        src="assets/sfx/impact/impactBell_heavy_000.ogg"
+      ></audio>
+
+      <!-- SCENE 1: THE HOOK -->
+      <div id="scene1" class="clip" data-start="0" data-duration="4.2" data-track-index="10">
+        <div class="badge" id="s1-badge">
+          <span class="badge-dot"></span>
+          Mobbin Design System
+        </div>
+        <h1 class="headline-hero" id="s1-head">Where teams and agents<br/>find designs that work.</h1>
+        <p class="subhead" id="s1-sub">Skip weeks of UI & UX guesswork with real-world product patterns.</p>
+        <div class="mockup-container" id="s1-mockups">
+          <div class="phone-card phone-left">
+            <img src="assets/images/screen_0.png" alt="iOS screen" />
+          </div>
+          <div class="phone-card phone-center">
+            <img src="assets/images/screen_1.png" alt="Featured screen" />
+          </div>
+          <div class="phone-card phone-right">
+            <img src="assets/images/screen_4.png" alt="App screen" />
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 2: THE SCALE -->
+      <div id="scene2" class="clip" data-start="4.2" data-duration="4.8" data-track-index="11">
+        <div class="badge" id="s2-badge">
+          <span class="badge-dot"></span>
+          Unrivaled Scale
+        </div>
+        <div class="count-number" id="s2-count">400,000+</div>
+        <p class="subhead" id="s2-sub">Searchable mobile & web app screens at your fingertips.</p>
+        <div class="filter-pills" id="s2-pills">
+          <div class="pill active" id="pill-ios">iOS Apps</div>
+          <div class="pill active" id="pill-android">Android</div>
+          <div class="pill" id="pill-web">Web Apps</div>
+          <div class="pill" id="pill-flows">UI Flows</div>
+        </div>
+        <div class="wall-row" id="s2-wall">
+          <div class="wall-item"><img src="assets/images/screen_0.png" alt="screen" /></div>
+          <div class="wall-item"><img src="assets/images/screen_1.png" alt="screen" /></div>
+          <div class="wall-item"><img src="assets/images/screen_2.png" alt="screen" /></div>
+          <div class="wall-item"><img src="assets/images/screen_3.png" alt="screen" /></div>
+          <div class="wall-item"><img src="assets/images/screen_4.png" alt="screen" /></div>
+          <div class="wall-item"><img src="assets/images/screen_5.png" alt="screen" /></div>
+          <div class="wall-item"><img src="assets/images/screen_6.png" alt="screen" /></div>
+          <div class="wall-item"><img src="assets/images/screen_7.png" alt="screen" /></div>
+        </div>
+      </div>
+
+      <!-- SCENE 3: DEEP USER FLOWS -->
+      <div id="scene3" class="clip" data-start="9.0" data-duration="5.5" data-track-index="12">
+        <div class="badge" id="s3-badge">
+          <span class="badge-dot"></span>
+          End-to-End Teardowns
+        </div>
+        <h2 class="headline-hero" id="s3-head" style="font-size: 64px;">Inspect Full Real-World Flows</h2>
+        <p class="subhead" id="s3-sub">See how leading apps design entire onboarding, paywall & checkout journeys.</p>
+        <div class="flows-wrapper" id="s3-flows">
+          <div class="flow-card" id="flow-card-1">
+            <div class="flow-header">
+              <span class="flow-step-num">STEP 01</span>
+              <span class="flow-step-title">Welcome & Auth</span>
+            </div>
+            <div class="flow-preview">
+              <img src="assets/images/screen_5.png" alt="Flow Step 1" />
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-card" id="flow-card-2">
+            <div class="flow-header">
+              <span class="flow-step-num">STEP 02</span>
+              <span class="flow-step-title">Paywall Offer</span>
+            </div>
+            <div class="flow-preview">
+              <img src="assets/images/screen_1.png" alt="Flow Step 2" />
+            </div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-card" id="flow-card-3">
+            <div class="flow-header">
+              <span class="flow-step-num">STEP 03</span>
+              <span class="flow-step-title">Checkout & Confirm</span>
+            </div>
+            <div class="flow-preview">
+              <img src="assets/images/screen_6.png" alt="Flow Step 3" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 4: AI AGENTS & MCP -->
+      <div id="scene4" class="clip" data-start="14.5" data-duration="5.5" data-track-index="13">
+        <div class="badge" id="s4-badge">
+          <span class="badge-dot"></span>
+          AI Agent Ready
+        </div>
+        <h2 class="headline-hero" id="s4-head" style="font-size: 64px;">Give your AI agents access to Mobbin.</h2>
+        <p class="subhead" id="s4-sub">Connect via Model Context Protocol (MCP) to let your coding agent query UI references directly.</p>
+        <div class="mcp-box" id="s4-mcp">
+          <div class="mcp-topbar">
+            <div class="terminal-dot dot-red"></div>
+            <div class="terminal-dot dot-yellow"></div>
+            <div class="terminal-dot dot-green"></div>
+            <span style="font-size: 14px; color: #94a3b8; font-family: monospace; margin-left: 12px;">agent_mcp_session — bash</span>
+          </div>
+          <div class="mcp-code">
+            <span class="keyword">const</span> result = <span class="keyword">await</span> mobbin.<span class="prop">searchFlows</span>({<br/>
+            &nbsp;&nbsp;<span class="prop">category</span>: <span class="string">"paywall_v2"</span>,<br/>
+            &nbsp;&nbsp;<span class="prop">platform</span>: <span class="string">"ios"</span>,<br/>
+            &nbsp;&nbsp;<span class="prop">apps</span>: [<span class="string">"Duolingo"</span>, <span class="string">"Revolut"</span>, <span class="string">"Linear"</span>]<br/>
+            });<br/>
+            <span style="color: #94a3b8;">// → 400,000+ screens indexed and injected to agent</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENE 5: OUTRO & LOGO -->
+      <div id="scene5" class="clip" data-start="20.0" data-duration="4.0" data-track-index="14">
+        <h1 class="logo-title" id="s5-logo">MOBBIN</h1>
+        <p class="subhead" id="s5-sub" style="font-size: 32px; color: #f8fafc; font-weight: 600;">Save hours of UI & UX research.</p>
+        <div class="cta-btn" id="s5-btn">
+          Explore for free at mobbin.com
+          <span>→</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // SCENE 1 (0.0s - 4.2s)
+      tl.set("#scene1", { opacity: 1 }, 0);
+      tl.fromTo("#s1-badge", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+      tl.fromTo("#s1-head", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.4);
+      tl.fromTo("#s1-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.7);
+      tl.fromTo("#s1-mockups", 
+        { opacity: 0, y: 150, scale: 0.85 }, 
+        { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: "back.out(1.2)" }, 
+        1.1
+      );
+      tl.to("#scene1", { opacity: 0, scale: 0.95, duration: 0.4, ease: "power2.in" }, 3.8);
+
+      // SCENE 2 (4.2s - 9.0s)
+      tl.set("#scene2", { opacity: 1 }, 4.2);
+      tl.fromTo("#s2-badge", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 4.3);
+      tl.fromTo("#s2-count", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 4.5);
+      tl.fromTo("#s2-sub", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 4.8);
+      tl.fromTo(".pill", 
+        { opacity: 0, y: 20 }, 
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.12, ease: "power2.out" }, 
+        5.2
+      );
+      tl.fromTo("#s2-wall", 
+        { opacity: 0, x: 200 }, 
+        { opacity: 1, x: -350, duration: 3.5, ease: "none" }, 
+        5.0
+      );
+      tl.to("#scene2", { opacity: 0, duration: 0.4, ease: "power2.in" }, 8.6);
+
+      // SCENE 3 (9.0s - 14.5s)
+      tl.set("#scene3", { opacity: 1 }, 9.0);
+      tl.fromTo("#s3-badge", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 9.1);
+      tl.fromTo("#s3-head", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 9.3);
+      tl.fromTo("#s3-sub", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 9.5);
+      tl.fromTo(".flow-card", 
+        { opacity: 0, y: 60, scale: 0.9 }, 
+        { opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.25, ease: "power2.out" }, 
+        9.8
+      );
+      tl.fromTo(".flow-arrow", { opacity: 0, scale: 0 }, { opacity: 0.8, scale: 1, duration: 0.4, stagger: 0.25 }, 10.3);
+      tl.to("#scene3", { opacity: 0, scale: 0.96, duration: 0.4, ease: "power2.in" }, 14.1);
+
+      // SCENE 4 (14.5s - 20.0s)
+      tl.set("#scene4", { opacity: 1 }, 14.5);
+      tl.fromTo("#s4-badge", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 14.6);
+      tl.fromTo("#s4-head", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 14.8);
+      tl.fromTo("#s4-sub", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 15.0);
+      tl.fromTo("#s4-mcp", 
+        { opacity: 0, y: 50, scale: 0.92 }, 
+        { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "back.out(1.2)" }, 
+        15.3
+      );
+      tl.to("#s4-mcp", { 
+        boxShadow: "0 0 90px rgba(59, 130, 246, 0.4), 0 30px 60px rgba(0,0,0,0.8)", 
+        repeat: 2, 
+        yoyo: true, 
+        duration: 1.0 
+      }, 16.2);
+      tl.to("#scene4", { opacity: 0, duration: 0.4, ease: "power2.in" }, 19.6);
+
+      // SCENE 5 (20.0s - 24.0s)
+      tl.set("#scene5", { opacity: 1 }, 20.0);
+      tl.fromTo("#s5-logo", 
+        { opacity: 0, scale: 0.85, y: 30 }, 
+        { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: "power3.out" }, 
+        20.1
+      );
+      tl.fromTo("#s5-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 20.6);
+      tl.fromTo("#s5-btn", 
+        { opacity: 0, scale: 0.9, y: 20 }, 
+        { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(1.5)" }, 
+        21.0
+      );
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
